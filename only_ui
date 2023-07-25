@@ -1,0 +1,320 @@
+// import 'package:flutter/material.dart';
+// import 'package:xen_popup_card/xen_card.dart';
+
+// void main() => runApp(Myapp());
+
+// class Myapp extends StatelessWidget {
+//   const Myapp({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       debugShowCheckedModeBanner: false,
+
+//       home: ChatPage(),
+//     );
+//   }
+// }
+
+// class ChatPage extends StatelessWidget {
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         automaticallyImplyLeading: false,
+//         title: Text('Chats'),
+//         actions: [
+//           IconButton(
+//             onPressed: (){},
+//             icon: Icon(Icons.search)),
+//           SizedBox(width: 5,),
+//           IconButton(
+//             onPressed: (){
+//               Navigator.push(context, MaterialPageRoute(
+//               builder: (BuildContext context){
+//                 return Q_page();
+//               }
+//             ));
+//             },
+//             icon: Icon(Icons.local_post_office))
+//         ],
+//       ),
+//       body: Column(
+//       children: [
+//         Container(
+//           //color: Colors.blue,
+//           padding: EdgeInsets.fromLTRB(5, 5, 0, 0),
+//           child: Row(
+//             children: [
+//               OutlinedButton(
+//                 onPressed: (){}, 
+//                 child: Text('Recent Message'),
+//                 style : OutlinedButton.styleFrom(
+//                   shape: RoundedRectangleBorder(
+//                     borderRadius: BorderRadius.all(Radius.circular(15))
+//                   )
+//                 )
+//                 ),
+
+//                 SizedBox(width:10,),
+
+//               OutlinedButton(
+//                 onPressed: (){}, 
+//                 child: Text('Active'),
+//                 style : OutlinedButton.styleFrom(
+//                   shape: RoundedRectangleBorder(
+//                     borderRadius: BorderRadius.all(Radius.circular(15))
+//                   )
+//                 )
+//                 )
+//             ],
+//           ),
+//         ),
+//         SizedBox(height: 10,),
+//         OutlinedButton(
+//           onPressed: (){},
+//           style: OutlinedButton.styleFrom(
+//            padding: EdgeInsets.all(20), 
+//           ),
+//           child: Row(
+//             children: [
+//               Icon(Icons.account_circle, size: 40, color: Colors.black,),
+//               SizedBox(width: 20,),
+//               Text('이땡땡', style: TextStyle(fontSize:16, color:Colors.black),),
+//             ],
+//           )
+//         ),
+
+//         OutlinedButton(
+//           onPressed: (){},
+//           style: OutlinedButton.styleFrom(
+//            padding: EdgeInsets.all(20), 
+//           ),
+//           child: Row(
+//             children: [
+//               Icon(Icons.account_circle, size: 40, color: Colors.black,),
+//               SizedBox(width: 20,),
+//               Text('김땡땡', style: TextStyle(fontSize:16, color:Colors.black),),
+//             ],
+//           )
+//         ),
+
+//         OutlinedButton(
+//           onPressed: (){},
+//           style: OutlinedButton.styleFrom(
+//            padding: EdgeInsets.all(20), 
+//           ),
+//           child: Row(
+//             children: [
+//               Icon(Icons.account_circle, size: 40, color: Colors.black,),
+//               SizedBox(width: 20,),
+//               Text('박땡땡', style: TextStyle(fontSize:16, color:Colors.black),),
+//             ],
+//           )
+//         ),
+
+//         OutlinedButton(
+//           onPressed: (){},
+//           style: OutlinedButton.styleFrom(
+//            padding: EdgeInsets.all(20), 
+//           ),
+//           child: Row(
+//             children: [
+//               Icon(Icons.account_circle, size: 40, color: Colors.black,),
+//               SizedBox(width: 20,),
+//               Text('최땡땡', style: TextStyle(fontSize:16, color:Colors.black),),
+//             ],
+//           )
+//         ),
+//       ],
+//     ),
+
+//     bottomNavigationBar: BottomNavigationBar(
+//         backgroundColor: Colors.white,
+//           type: BottomNavigationBarType.fixed,
+//           items: [
+//           BottomNavigationBarItem(
+//             icon: Icon(Icons.chat,),
+//             label: '채팅',
+//           ),
+//           BottomNavigationBarItem(
+//             icon: Icon(Icons.home,),
+//             label: '홈',
+//           ),
+//           // BottomNavigationBarItem(
+//           //   icon: Icon(Icons.notifications,),
+//           //   label: '알람',
+//           // ),
+//           BottomNavigationBarItem(
+//             icon: Icon(Icons.more_horiz,),
+//             label: '설정',
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+// class Q_page extends StatelessWidget {
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//        appBar: AppBar(
+//          title: Text('받은 질문지'),
+//        ),
+//        body: Column(
+//          children: [
+//            OutlinedButton(
+//             onPressed: () => showDialog(
+//               context: context,
+//               builder: (builder) => XenPopupCard(
+//               appBar: appBar,
+//               gutter: gutter,
+//               body: Column(
+//                 children: [
+//                   SizedBox(height: 10),
+
+//                   Row(
+//                     mainAxisAlignment: MainAxisAlignment.start,
+//                     children: [
+//                       Text(
+//                         "Q1. 당신의 mbti는 무엇인가요?",
+//                         style: TextStyle(fontSize: 25),
+//                       ),
+//                     ],
+//                   ),
+
+//                   SizedBox(height: 5),
+
+//                   Row(
+//                     mainAxisAlignment: MainAxisAlignment.end,
+//                     children: [
+//                       Expanded(
+//                         child: Text(
+//                           "저는 ISFP 입니다.",
+//                           style: TextStyle(fontSize: 20),
+//                           textAlign: TextAlign.right,
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+
+//                   SizedBox(height: 15), // 원하는 간격 설정
+
+//                   Row(
+//                     mainAxisAlignment: MainAxisAlignment.start,
+//                     children: [
+//                       Text(
+//                         "Q2. 당신의 취미는 무엇인가요?",
+//                         style: TextStyle(fontSize: 25),
+//                       ),
+//                     ],
+//                   ),
+
+//                   SizedBox(height: 5),
+
+//                   Row(
+//                     mainAxisAlignment: MainAxisAlignment.end,
+//                     children: [
+//                       Expanded(
+//                         child: Text(
+//                           "저는 자전거타는 걸 좋아합니다.",
+//                           style: TextStyle(fontSize: 20),
+//                           textAlign: TextAlign.right,
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ],
+//               )
+//               ),
+//             ),
+//             style: OutlinedButton.styleFrom(
+//             padding: EdgeInsets.all(20), 
+//             ),
+//             child: Row(
+//               children: [
+//                 Icon(Icons.account_circle, size: 40, color: Colors.black,),
+//                 SizedBox(width: 20,),
+//                 Text('김철수 님의 질문지', style: TextStyle(fontSize:16, color:Colors.black),),
+//               ],
+//            )
+//           ),
+//             OutlinedButton(
+//                 onPressed: (){},
+//                 style: OutlinedButton.styleFrom(
+//                 padding: EdgeInsets.all(20), 
+//               ),
+//               child: Row(
+//                 children: [
+//                   Icon(Icons.account_circle, size: 40, color: Colors.black,),
+//                   SizedBox(width: 20,),
+//                   Text('김영희 님의 질문지', style: TextStyle(fontSize:16, color:Colors.black),),
+//                 ],
+//              )
+//           ),
+//          ],
+//        ),
+//      );
+//   }
+
+//   XenCardAppBar appBar = const XenCardAppBar(
+//     child: Text(
+//       "김철수 님의 질문지",
+//       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
+//     ),
+//     // To remove shadow from appbar
+//     shadow: BoxShadow(color: Colors.transparent),
+//   );
+
+//   XenCardGutter gutter = const XenCardGutter(
+//     child: Padding(
+//       padding: EdgeInsets.all(8.0),
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.end,
+//         children: [
+//           CustomButton(text: "Ok"),
+//           SizedBox(width: 10,),
+//           CustomButton(text: "No"),
+//         ],
+//       )
+//     ),
+//   );
+// }
+
+// // custom button
+// // ignore
+// class CustomButton extends StatelessWidget {
+//   const CustomButton({Key? key, required this.text, this.color})
+//       : super(key: key);
+
+//   final String text;
+//   final Color? color;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return InkWell(
+//       onTap: () => Navigator.pop(context),
+//       child: Material(
+//         borderRadius: BorderRadius.circular(5),
+//         //color: const Color(0xff6200ee),
+//         color:Colors.blue,
+//         child: Padding(
+//           padding: const EdgeInsets.all(8.0),
+//           child: FittedBox(
+//             fit: BoxFit.fitWidth,
+//             child: Center(
+//               child: Text(text,
+//                   style: const TextStyle(
+//                       fontSize: 17,
+//                       color: Colors.white,
+//                       fontWeight: FontWeight.w500)),
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
