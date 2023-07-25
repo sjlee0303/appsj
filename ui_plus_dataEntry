@@ -352,13 +352,13 @@ class _DataEntryPage extends State<DataEntryPage> {
   final TextEditingController _TwoController = TextEditingController();
   final TextEditingController _ThreeController = TextEditingController();
 
-  late final String _titleText;
+  //late final String _titleText;
 
 
   @override
   void initState(){
     super.initState();
-    _titleText = 'Answer';
+    //_titleText = '이땡땡 님의 질문에 대한 답변을 작성해주세요.';
   }
 
   @override
@@ -394,7 +394,7 @@ class _DataEntryPage extends State<DataEntryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_titleText),
+        title: Text('이땡땡 님의 질문에 대한 답변을 작성해주세요.'),
       ),
       body: Align(
         alignment: Alignment.topCenter,
@@ -408,6 +408,7 @@ class _DataEntryPage extends State<DataEntryPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Text('당신의 mbti는 무엇인가요?'),
                     TextFormField(
                       controller: _OneController,
                       decoration: const InputDecoration(
@@ -420,6 +421,8 @@ class _DataEntryPage extends State<DataEntryPage> {
                         return null;
                       },
                       ),
+                      const SizedBox(height: 30),
+                      Text('당신의 취미는 무엇인가요?'),
                       TextFormField(
                         controller: _TwoController,
                         decoration: const InputDecoration(
@@ -432,6 +435,8 @@ class _DataEntryPage extends State<DataEntryPage> {
                         return null;
                       },
                       ),
+                      const SizedBox(height: 30),
+                      Text('당신은 강아지를 좋아하나요?'),
                       TextFormField(
                         controller: _ThreeController,
                         decoration: const InputDecoration(
@@ -447,7 +452,7 @@ class _DataEntryPage extends State<DataEntryPage> {
                       const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: submitForm,
-                        child: Text(_titleText),
+                        child: Text('질문지 전송'),
                       ),
                   ],
                 ),
