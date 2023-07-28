@@ -1,0 +1,525 @@
+import 'package:flutter/material.dart';
+import 'package:xen_popup_card/xen_card.dart';
+
+import 'package:amplify_api/amplify_api.dart';
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:amplify_authenticator/amplify_authenticator.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
+
+import 'package:go_router/go_router.dart';
+
+import 'amplifyconfiguration.dart';
+import 'models/ModelProvider.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await _configureAmplify();
+  runApp(const Myapp());
+}
+// void main() => runApp(Myapp());
+
+Future<void> _configureAmplify() async {
+    try {
+    // Create the API plugin.
+    //
+    // If `ModelProvider.instance` is not available, try running 
+    // `amplify codegen models` from the root of your project.
+    final api = AmplifyAPI(modelProvider: ModelProvider.instance);
+    
+    // Create the Auth plugin.
+    final auth = AmplifyAuthCognito();
+
+    // Add the plugins and configure Amplify for your app.
+    await Amplify.addPlugins([api, auth]);
+    await Amplify.configure(amplifyconfig);
+    
+    safePrint('Successfully configured');
+  } on Exception catch (e) {
+    safePrint('Error configuring Amplify: $e');
+  }
+}
+
+class Myapp extends StatelessWidget {
+  const Myapp({super.key});
+
+  // GoRouter configuration
+  static final _router = GoRouter(
+    routes: [
+      GoRoute(
+        path: '/',
+        builder: (context, state) => ChatPage(),
+      ),
+      GoRoute(
+        path: '/data-entry',
+        name: 'manage',
+        builder: (context, state) => DataEntryPage(
+          appsj: state.extra as Appsj?,
+        )
+      )
+    ],
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return Authenticator(
+     child: MaterialApp.router(
+       routerConfig: _router,
+       debugShowCheckedModeBanner: false,
+       builder: Authenticator.builder(),
+     ),
+   );
+  }
+}
+
+class ChatPage extends StatefulWidget{
+  const ChatPage({super.key});
+
+  @override
+  State<ChatPage> createState()=> _ChatPage();
+}
+
+class _ChatPage extends State<ChatPage> {
+
+  var _appsj = <Appsj>[];
+
+  Future<void> _navigateToDataEntry({Appsj? appsj}) async {
+    await context.pushNamed('manage', extra: appsj);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text('Chats'),
+        actions: [
+          IconButton(
+            onPressed: (){},
+            icon: Icon(Icons.search)),
+          SizedBox(width: 5,),
+          IconButton(
+            onPressed: (){
+              Navigator.push(context, MaterialPageRoute(
+              builder: (BuildContext context){
+                return Q_page();
+              }
+            ));
+            },
+            icon: Icon(Icons.local_post_office))
+        ],
+      ),
+      body: Column(
+      children: [
+        Container(
+          //color: Colors.blue,
+          padding: EdgeInsets.fromLTRB(5, 5, 0, 0),
+          child: Row(
+            children: [
+              OutlinedButton(
+                onPressed: (){}, 
+                child: Text('Chat'),
+                style : OutlinedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15))
+                  )
+                )
+                ),
+
+                SizedBox(width:10,),
+
+              OutlinedButton(
+                onPressed: (){}, 
+                child: Text('Chat'),
+                style : OutlinedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15))
+                  )
+                )
+                )
+            ],
+          ),
+        ),
+        SizedBox(height: 10,),
+        OutlinedButton(
+          // 여기서 버튼 눌렀을 때 질문지 보여주고 질문에 대한 답변 적는 부분 만들기
+          onPressed: _navigateToDataEntry,
+          style: OutlinedButton.styleFrom(
+           padding: EdgeInsets.all(20), 
+          ),
+          child: Row(
+            children: [
+              Icon(Icons.account_circle, size: 40, color: Colors.black,),
+              SizedBox(width: 20,),
+              Text('이땡땡', style: TextStyle(fontSize:16, color:Colors.black),),
+            ],
+          )
+        ),
+      ],
+    ),
+
+    bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
+          type: BottomNavigationBarType.fixed,
+          items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat,),
+            label: '채팅',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home,),
+            label: '홈',
+          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.notifications,),
+          //   label: '알람',
+          // ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.more_horiz,),
+            label: '설정',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Q_page extends StatelessWidget {
+
+  // 데이터 가져온 것 활용하는 부분
+  Future<void> _fetchAppsjList(BuildContext context) async {
+    List<Appsj?> appsjList = await queryListItems();
+
+    print(appsjList[0]);
+
+    _showDialog(context, appsjList);
+  }
+
+  Future<void> _showDialog(BuildContext context, List<Appsj?> appsjList) async {
+    showDialog(
+      context: context,
+      builder: (builder) => XenPopupCard(
+      appBar: appBar,
+      gutter: gutter,
+      body: Column(
+        children: [
+          SizedBox(height: 10),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                "Q1. 당신의 mbti는 무엇인가요?",
+                style: TextStyle(fontSize: 25),
+              ),
+            ],
+          ),
+
+          SizedBox(height: 5),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Expanded(
+                child: Text(
+                  appsjList[0]?.A_one ?? '',
+                  style: TextStyle(fontSize: 20),
+                  textAlign: TextAlign.right,
+                ),
+              ),
+            ],
+          ),
+
+          SizedBox(height: 15), // 원하는 간격 설정
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                "Q2. 당신의 취미는 무엇인가요?",
+                style: TextStyle(fontSize: 25),
+              ),
+            ],
+          ),
+
+          SizedBox(height: 5),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Expanded(
+                child: Text(
+                  appsjList[0]?.A_two ?? '',
+                  style: TextStyle(fontSize: 20),
+                  textAlign: TextAlign.right,
+                ),
+              ),
+            ],
+          ),
+
+          SizedBox(height: 15),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                "Q3. 당신은 강아지를 좋아하나요?",
+                style: TextStyle(fontSize: 25),
+              ),
+            ],
+          ),
+
+          SizedBox(height: 5),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Expanded(
+                child: Text(
+                  appsjList[0]?.A_three ?? '',
+                  style: TextStyle(fontSize: 20),
+                  textAlign: TextAlign.right,
+                ),
+              ),
+            ],
+          ),
+
+        ],
+      )
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+       appBar: AppBar(
+         title: Text('받은 질문지'),
+       ),
+       body: Column(
+         children: [
+           OutlinedButton(
+            onPressed: ()=> _fetchAppsjList(context),
+            style: OutlinedButton.styleFrom(
+            padding: EdgeInsets.all(20), 
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.account_circle, size: 40, color: Colors.black,),
+                SizedBox(width: 20,),
+                Text('김철수 님의 질문지', style: TextStyle(fontSize:16, color:Colors.black),),
+              ],
+           )
+          ),
+         ],
+       ),
+     );
+  }
+
+  XenCardAppBar appBar = const XenCardAppBar(
+    child: Text(
+      "김철수 님의 질문지",
+      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
+    ),
+    // To remove shadow from appbar
+    shadow: BoxShadow(color: Colors.transparent),
+  );
+
+  XenCardGutter gutter = const XenCardGutter(
+    child: Padding(
+      padding: EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          CustomButton(text: "Ok"),
+          SizedBox(width: 10,),
+          CustomButton(text: "No"),
+        ],
+      )
+    ),
+  );
+}
+
+// custom button
+// ignore
+class CustomButton extends StatelessWidget {
+  const CustomButton({Key? key, required this.text, this.color})
+      : super(key: key);
+
+  final String text;
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => Navigator.pop(context),
+      child: Material(
+        borderRadius: BorderRadius.circular(5),
+        //color: const Color(0xff6200ee),
+        color:Colors.blue,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: FittedBox(
+            fit: BoxFit.fitWidth,
+            child: Center(
+              child: Text(text,
+                  style: const TextStyle(
+                      fontSize: 17,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500)),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class DataEntryPage extends StatefulWidget{
+  const DataEntryPage ({
+    required this.appsj,
+    super.key,
+  });
+
+  final Appsj? appsj;
+
+  @override
+  State<DataEntryPage> createState() =>
+    _DataEntryPage();
+}
+
+class _DataEntryPage extends State<DataEntryPage> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _OneController = TextEditingController();
+  final TextEditingController _TwoController = TextEditingController();
+  final TextEditingController _ThreeController = TextEditingController();
+
+  //late final String _titleText;
+
+  @override
+  void initState(){
+    super.initState();
+    //_titleText = '이땡땡 님의 질문에 대한 답변을 작성해주세요.';
+  }
+
+  @override
+  void dispose(){
+    _OneController.dispose();
+    _TwoController.dispose();
+    _ThreeController.dispose();
+    super.dispose();
+  }
+
+  Future<void> submitForm() async { // 데이터 입력하고 버튼 클릭하면 실행하는 부분
+    
+    final one = _OneController.text;
+    final two = _TwoController.text;
+    final three = _ThreeController.text;
+
+    final newEntry = Appsj(
+      A_one: one,
+      A_two: two,
+      A_three: three,
+    );
+    final request = ModelMutations.create(newEntry);
+    final response = await Amplify.API.mutate(request:request).response;
+    safePrint('Create result: $response');
+
+    if(mounted){
+      context.pop();
+    }
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('이땡땡 님의 질문에 대한 답변을 작성해주세요.'),
+      ),
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('당신의 mbti는 무엇인가요?'),
+                    TextFormField(
+                      controller: _OneController,
+                      decoration: const InputDecoration(
+                        labelText: '(required)',
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a answer';
+                        }
+                        return null;
+                      },
+                      ),
+                      const SizedBox(height: 30),
+                      Text('당신의 취미는 무엇인가요?'),
+                      TextFormField(
+                        controller: _TwoController,
+                        decoration: const InputDecoration(
+                        labelText: '(required)',
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a answer';
+                        }
+                        return null;
+                      },
+                      ),
+                      const SizedBox(height: 30),
+                      Text('당신은 강아지를 좋아하나요?'),
+                      TextFormField(
+                        controller: _ThreeController,
+                        decoration: const InputDecoration(
+                        labelText: '(required)',
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a answer';
+                        }
+                        return null;
+                      },
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: submitForm,
+                        child: Text('질문지 전송'),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      );
+  }
+
+}
+
+// Appsj의 데이터 리스트를 가져오는 코드
+Future<List<Appsj?>> queryListItems() async {
+  try {
+    final request = ModelQueries.list(Appsj.classType);
+    final response = await Amplify.API.query(request: request).response;
+
+    final appsjs = response.data?.items;
+    if(appsjs == null){
+      safePrint('error: ${response.errors}');
+      return const [];
+    }
+    return appsjs;
+  } on ApiException catch(e){
+    safePrint('Query failed: $e');
+    return const [];
+  }
+}
